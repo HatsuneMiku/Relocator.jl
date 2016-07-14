@@ -6,7 +6,6 @@ module Relocator
 
 export searchResDll
 export _init, _close, _mf
-export _rel
 
 function searchResDll(bp::AbstractString, rp::AbstractString, fa::Bool)
   if length(bp) == 0
@@ -37,6 +36,8 @@ immutable Rel
   end
 end
 
+const _rel = Rel()
+
 function _init(r::Rel, sym::Array{Symbol,1}, bp::AbstractString)
   if isempty(r.dct)
     mp = searchResDll(bp, "dll", false) * "/"
@@ -55,15 +56,16 @@ function _close(r::Rel)
   end
 end
 
-const _rel = Rel()
-
-# without parameter _rel
-function _mf(md::Symbol, fn::Symbol)
-  c = Base.Libdl.dlsym_e(_rel.dct[md], fn)
+function _mf(r::Rel, md::Symbol, fn::Symbol)
+  c = Base.Libdl.dlsym_e(r.dct[md], fn)
   if c == C_NULL
     throw(ArgumentError("not found function '$(fn)' in ':$(md)'"))
   end
   return c
 end
+
+_init(sym::Array{Symbol,1}, bp::AbstractString) = _init(_rel, sym, bp)
+_close() = _close(_rel)
+_mf(md::Symbol, fn::Symbol) = _mf(_rel, md, fn)
 
 end
