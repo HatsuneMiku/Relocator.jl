@@ -4,6 +4,8 @@
 VERSION >= v"0.4.0-dev+6521" && __precompile__()
 module Relocator
 
+import Base
+
 export searchResDll
 export _init, _close, _mf
 
