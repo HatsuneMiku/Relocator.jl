@@ -7,7 +7,34 @@ module Relocator
 import Base
 
 export searchResDll
-export _init, _close, _mf
+export _init, _close, _mf, @mf, @cf, @wf
+
+macro wf(lib, restype, fnc, argtypes)
+  local args = [symbol("a", n) for n in 1:length(argtypes.args)]
+  quote
+    $(esc(fnc))($(args...)) = ccall(
+      ($(string(fnc)), $(Expr(:quote, lib))), stdcall, # (:fnc, :lib)
+      $restype, $argtypes, $(args...))
+  end
+end
+
+macro cf(restype, fnc, argtypes)
+  local args = [symbol("a", n) for n in 1:length(argtypes.args)]
+  quote
+    $(esc(fnc))($(args...)) = ccall(
+      $(string(fnc)), # :fnc
+      $restype, $argtypes, $(args...))
+  end
+end
+
+macro mf(lib, restype, fnc, argtypes)
+  local args = [symbol("a", n) for n in 1:length(argtypes.args)]
+  quote
+    $(esc(fnc))($(args...)) = ccall(
+      _mf(symbol($(string(lib))), symbol($(string(fnc)))), # (:lib, :fnc)
+      $restype, $argtypes, $(args...))
+  end
+end
 
 function searchResDll(bp::AbstractString, rp::AbstractString, fa::Bool)
   if length(bp) == 0
