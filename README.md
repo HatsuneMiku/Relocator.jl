@@ -6,7 +6,7 @@ Relocator.jl is a Julia package to Locate Resource and Dll used by DirectX etc.
 [![DirectX](https://rawgithub.com/HatsuneMiku/DirectX.jl/master/res/DirectX_0.4.svg)](https://github.com/HatsuneMiku/DirectX.jl)
 
 
-<img src="https://rawgit.com/HatsuneMiku/DirectX.jl/master/res/DirectX_0.4.svg">
+<img src="https://cdn.jsdelivr.net/gh/HatsuneMiku/DirectX.jl@master/res/DirectX_0.4.svg">
 
 
 # status
